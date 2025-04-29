@@ -4,12 +4,14 @@ import { StatusCodes } from 'http-status-codes';
 import globalErrorHandler from './app/middlewares/globalErrorHandler';
 import router from './routes';
 import { Morgan } from './shared/morgen';
+import { handleWebhook } from './webhook/handleWebhook';
 const app = express();
 
 //morgan
 app.use(Morgan.successHandler);
 app.use(Morgan.errorHandler);
 
+app.post('/api/webhook',express.raw({'type':'application/json'}),handleWebhook)
 //body parser
 app.use(cors());
 app.use(express.json());

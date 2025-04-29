@@ -1,0 +1,96 @@
+import mongoose, { Schema, model } from 'mongoose';
+import { BookingModel, IBooking } from './booking.interface';
+import { BookingStatus } from '../../../enums/booking';
+
+const bookingSchema = new Schema<IBooking,BookingModel>({
+  service: {
+    type: Schema.Types.ObjectId,
+    ref: 'Service',
+    required: true
+  },
+  user: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  },
+  provider: {
+    type: Schema.Types.ObjectId,
+    ref: 'Provider',
+    required: true
+  },
+  date: {
+    type: String,
+    required: true
+  },
+  time: {
+    type: String,
+    required: true
+  },
+  pickup_location: {
+    name: { type: String, required: true },
+    latitude: { type: Number, required: true },
+    longitude: { type: Number, required: true }
+  },
+  dropoff_location: {
+    name: { type: String, required: true },
+    latitude: { type: Number, required: true },
+    longitude: { type: Number, required: true }
+  },
+  status: {
+    type: String,
+    enum: Object.values(BookingStatus),
+    default: BookingStatus.PENDING,
+    required: true
+  },
+  total_amount: {
+    type: Number,
+    required: true
+  },
+  payment_status: {
+    type: String,
+    enum: ['paid', 'unpaid'],
+    default: 'unpaid',
+    required: true
+  },
+  base_fare: {
+    type: Number,
+    required: true
+  },
+  service_charge: {
+    type: Number,
+    required: true
+  },
+  additional_travelerse_fee: {
+    type: Number,
+    required: true
+  },
+  kids: {
+    type: Number,
+    default: 0
+  },
+  adults: {
+    type: Number,
+    default: 0
+  },
+  tax: {
+    type: Number,
+    required: true
+  },
+  formatted_date: {
+    type: String
+  },
+  payment_intent_id: {
+    type: String
+  },
+  additional_info: {
+    type: String
+  },
+  total_price: {
+    type: Number
+  }
+  
+}, { timestamps: true });
+
+const Booking = model<IBooking, BookingModel>('Booking', bookingSchema);
+
+export default Booking;

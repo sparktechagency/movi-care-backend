@@ -1,14 +1,15 @@
 import { Model } from "mongoose";
-import { SERVICES_TYPE } from "../../../enums/services";
+
 
 export type IService = {
-    title: string;
+    name: string;
     description: string;
     image: string;
-    facilities: string[];
-    price: number;
-    status:"active"|"deleted"
-    service:SERVICES_TYPE
+    status:"active"|"deleted";
+    adults_price:number;
+    kids_price:number;
+    service_price?:number;
+    
 }
 
 export type ServiceModel = Model<IService>

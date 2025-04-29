@@ -25,5 +25,9 @@ export default {
   },
   geophy:{
     apiKey: process.env.GEO_API_KEY
+  },
+  stripe:{
+    secret_key:process.env.STRIPE_SECRET_KEY,
+    webhook_secret:process.env.WEBHOOK_SECRET,
   }
 };

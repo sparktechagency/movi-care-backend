@@ -59,6 +59,8 @@ const loginUserFromDB = async (payload: ILoginData) => {
   return { createToken };
 };
 
+
+
 //forget password
 const forgetPasswordToDB = async (email: string) => {
   const isExistUser = await User.isExistUserByEmail(email);
@@ -247,10 +249,24 @@ const changePasswordToDB = async (
   await User.findOneAndUpdate({ _id: user.id }, updateData, { new: true });
 };
 
+const googleSignInToDB = async (name:string,email:string) => {
+  const isExistUser = await User.findOne({ email });
+  let user = null;
+  if (isExistUser) {
+    user=isExistUser
+  } else {
+    const userdata = await User.create({ name, email, role: 'user' });
+    user=userdata
+  }
+  const token = jwtHelper.createToken({id:user._id,role:user.role,email:user.email},config.jwt.jwt_secret!,config.jwt.jwt_expire_in!);
+  return {accessToken:token};
+};
+
 export const AuthService = {
   verifyEmailToDB,
   loginUserFromDB,
   forgetPasswordToDB,
   resetPasswordToDB,
   changePasswordToDB,
+  googleSignInToDB
 };

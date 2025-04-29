@@ -4,7 +4,18 @@ import auth from '../../middlewares/auth';
 import validateRequest from '../../middlewares/validateRequest';
 import { AuthController } from './auth.controller';
 import { AuthValidation } from './auth.validation';
+import { UserValidation } from '../user/user.validation';
+import { UserController } from '../user/user.controller';
+import { passportHelper } from '../../../helpers/passportHelper';
+import passport from 'passport';
+passportHelper.googleInitialize()
 const router = express.Router();
+
+router.post(
+  '/signup',
+  validateRequest(UserValidation.createUserZodSchema),
+  UserController.createUser
+)
 
 router.post(
   '/login',
@@ -12,6 +23,14 @@ router.post(
   AuthController.loginUser
 );
 
+router.get(
+  '/google',
+  passport.authenticate('google', { scope: ['email', 'profile'] }))
+router.get(
+  '/google/callback',
+  passport.authenticate('google', { failureRedirect: '/login' }),
+  AuthController.googleSignIn
+)
 router.post(
   '/forget-password',
   validateRequest(AuthValidation.createForgetPasswordZodSchema),

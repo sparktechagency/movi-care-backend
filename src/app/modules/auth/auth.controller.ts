@@ -24,7 +24,7 @@ const loginUser = catchAsync(async (req: Request, res: Response) => {
     success: true,
     statusCode: StatusCodes.OK,
     message: 'User logged in successfully.',
-    data: result.createToken,
+    data: result,
   });
 });
 
@@ -67,8 +67,8 @@ const changePassword = catchAsync(async (req: Request, res: Response) => {
 });
 
 const googleSignIn = catchAsync(async (req: Request, res: Response) => {
-  const { ...googleData } = req.body;
-  const result = await AuthService.googleSignInToDB(googleData.name,googleData.email);
+  
+  const result = await AuthService.googleSignInToDB(req.user);
 
   sendResponse(res, {
     success: true,
@@ -78,11 +78,22 @@ const googleSignIn = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const refreshToken = catchAsync(async (req: Request, res: Response) => {
+  const token = req.headers.authorization
+  const result = await AuthService.refreshAccessTokenDB(token!)
+  sendResponse(res,{
+    statusCode:200,
+    success:true,
+    message:'Refreshed Token Successfully',
+    data:result
+  })
+});
 export const AuthController = {
   verifyEmail,
   loginUser,
   forgetPassword,
   resetPassword,
   changePassword,
-  googleSignIn
+  googleSignIn,
+  refreshToken
 };

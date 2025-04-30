@@ -34,4 +34,4 @@ const serviceSchema = new Schema<IService,ServiceModel>({
       }
 })
 
-export const Service = mongoose.model<IService,ServiceModel>("services", serviceSchema);
+export const Service = mongoose.model<IService,ServiceModel>("Service", serviceSchema);

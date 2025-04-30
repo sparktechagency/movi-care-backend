@@ -30,7 +30,8 @@ export type IBooking = {
     formatted_date?:string;
     payment_intent_id?:string;
     additional_info?:string
-    total_price?:number;
+    total_price :number;
+    order_id?:string;
 
 }
 

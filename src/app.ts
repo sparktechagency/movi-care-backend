@@ -5,6 +5,9 @@ import globalErrorHandler from './app/middlewares/globalErrorHandler';
 import router from './routes';
 import { Morgan } from './shared/morgen';
 import { handleWebhook } from './webhook/handleWebhook';
+import session from 'express-session';
+import passport from 'passport';
+import { passportHelper } from './helpers/passportHelper';
 const app = express();
 
 //morgan
@@ -16,7 +19,8 @@ app.post('/api/webhook',express.raw({'type':'application/json'}),handleWebhook)
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
+app.use(session({ secret: "sharifSecret", resave: false, saveUninitialized: true }));
+passportHelper.initializePassport()
 //file retrieve
 app.use(express.static('uploads'));
 

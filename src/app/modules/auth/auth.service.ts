@@ -16,6 +16,7 @@ import cryptoToken from '../../../util/cryptoToken';
 import generateOTP from '../../../util/generateOTP';
 import { ResetToken } from '../resetToken/resetToken.model';
 import { User } from '../user/user.model';
+import { IUser, UserModal } from '../user/user.interface';
 
 //login
 const loginUserFromDB = async (payload: ILoginData) => {
@@ -56,9 +57,23 @@ const loginUserFromDB = async (payload: ILoginData) => {
     config.jwt.jwt_expire_in as string
   );
 
-  return { createToken };
+  const refreshToken = await createRefreshToken(isExistUser)
+  return { createToken ,refreshToken};
 };
 
+async function createRefreshToken(user:any){
+  const refreshToken = cryptoToken()
+
+  await ResetToken.deleteMany({ user: user._id });
+ await ResetToken.create({
+    token:refreshToken,
+    user: user._id,
+    expireAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), //7 days
+  })
+
+  return refreshToken
+
+}
 
 
 //forget password
@@ -249,24 +264,43 @@ const changePasswordToDB = async (
   await User.findOneAndUpdate({ _id: user.id }, updateData, { new: true });
 };
 
-const googleSignInToDB = async (name:string,email:string) => {
-  const isExistUser = await User.findOne({ email });
-  let user = null;
-  if (isExistUser) {
-    user=isExistUser
-  } else {
-    const userdata = await User.create({ name, email, role: 'user' });
-    user=userdata
-  }
+const googleSignInToDB = async (user:any) => {
+
   const token = jwtHelper.createToken({id:user._id,role:user.role,email:user.email},config.jwt.jwt_secret!,config.jwt.jwt_expire_in!);
-  return {accessToken:token};
+  const refreshToken = await createRefreshToken(user);
+  return {accessToken:token,refreshToken};
 };
 
+const refreshAccessTokenDB = async (token: string) => {
+    
+  const existToken = ResetToken.isExistToken(token);
+  if (!existToken) {
+    throw new ApiError(StatusCodes.UNAUTHORIZED, 'Invalid token');
+  }
+  const isExipire = ResetToken.isExpireToken(token);
+  if (!isExipire) {
+    throw new ApiError(StatusCodes.UNAUTHORIZED, 'Token expired');
+  }
+  const leanUser = await ResetToken.findOne({token}).populate(["user"],['_id','email','role']).select('user')
+  const user:any = leanUser?.user;
+  console.log(user);
+  
+  if (!user) {
+    throw new ApiError(StatusCodes.UNAUTHORIZED, 'User not found');
+  }
+  const accessToken = jwtHelper.createToken({ id: user?._id, role: user?.role },config.jwt.jwt_secret!, config.jwt.jwt_expire_in!);
+  const refreshToken = token
+  await ResetToken.findOneAndUpdate({user:user._id}, {$set: {token: refreshToken, expireAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1),}})
+  return { accessToken, refreshToken };
+  
+  
+};
 export const AuthService = {
   verifyEmailToDB,
   loginUserFromDB,
   forgetPasswordToDB,
   resetPasswordToDB,
   changePasswordToDB,
-  googleSignInToDB
+  googleSignInToDB,
+  refreshAccessTokenDB
 };

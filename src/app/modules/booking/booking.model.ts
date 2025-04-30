@@ -87,6 +87,9 @@ const bookingSchema = new Schema<IBooking,BookingModel>({
   },
   total_price: {
     type: Number
+  },
+  order_id: {
+    type: String
   }
   
 }, { timestamps: true });

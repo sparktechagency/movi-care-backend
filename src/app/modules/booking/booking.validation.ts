@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { BookingStatus } from "../../../enums/booking";
 
 const createBookingZodSchema = z.object({
   body: z.object({
@@ -28,6 +29,19 @@ const createBookingZodSchema = z.object({
   }),
 })
 
+const updateBookingZodSchema = z.object({
+    body: z.object({
+        status: z.nativeEnum(BookingStatus),
+    })
+})
+const getSlotsZodSchema = z.object({
+    query: z.object({
+        month: z.string()
+    })
+}
+)
 export const BookingValidation = {
   createBookingZodSchema,
+  updateBookingZodSchema,
+  getSlotsZodSchema,
 };

@@ -1,12 +1,10 @@
-import { Model, ObjectId } from "mongoose"
+import { Model } from "mongoose"
 
 export type IProvider = {
     name:string,
     description: string,
     facilities:string[],
-    image:string,
     price:number,
-    service:ObjectId,
     status:"active"|"deleted"
 }
 

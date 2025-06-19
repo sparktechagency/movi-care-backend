@@ -24,5 +24,9 @@ router
   );
 
 
+router.route('/')
+  .get(auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN), UserController.getAllUsers)
+
+
 
 export const UserRoutes = router;

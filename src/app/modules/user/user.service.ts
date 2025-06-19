@@ -8,6 +8,7 @@ import unlinkFile from '../../../shared/unlinkFile';
 import generateOTP from '../../../util/generateOTP';
 import { IUser } from './user.interface';
 import { User } from './user.model';
+import QueryBuilder from '../../builder/QueryBuilder';
 
 const createUserToDB = async (payload: Partial<IUser>): Promise<IUser> => {
   //set role
@@ -74,8 +75,19 @@ const updateProfileToDB = async (
   return updateDoc;
 };
 
+const getAllUsersFromDB = async (query:Record<string,any>) => {
+  const result = new QueryBuilder(User.find({verified:true,role:{$ne:USER_ROLES.SUPER_ADMIN}}),query).paginate().sort().search(['name','email','location']).filter()
+  const getPaginationInfo = await result.getPaginationInfo()
+  const users = await result.modelQuery.lean()
+  return {
+    meta: getPaginationInfo,
+    data: users,
+  };
+};
+
 export const UserService = {
   createUserToDB,
   getUserProfileFromDB,
   updateProfileToDB,
+  getAllUsersFromDB,
 };

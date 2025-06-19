@@ -7,6 +7,7 @@ import { seedSuperAdmin } from './DB/seedAdmin';
 import { socketHelper } from './helpers/socketHelper';
 import { errorLogger, logger } from './shared/logger';
 import { passportHelper } from './helpers/passportHelper';
+import { cleanup } from './cleanup/cleanUp';
 
 
 //uncaught exception
@@ -23,6 +24,7 @@ async function main() {
 
     //Seed Super Admin after database connection is successful
     await seedSuperAdmin();
+    cleanup()
     const port =
       typeof config.port === 'number' ? config.port : Number(config.port);
 
@@ -43,6 +45,8 @@ async function main() {
     //@ts-ignore
     global.io = io;
   } catch (error) {
+    console.log(error);
+    
     errorLogger.error(colors.red('🤢 Failed to connect Database'));
   }
 

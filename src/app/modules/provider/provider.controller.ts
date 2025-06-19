@@ -7,12 +7,10 @@ import unlinkFile from "../../../shared/unlinkFile";
 
 const createProvider = catchAsync(
     async (req:Request,res:Response)=>{
-        const image = getSingleFilePath(req.files,'image')
         const data = req.body
-        data.facilities=JSON.parse(data.facilities)
         const result = await ProviderService.createProvider({
             ...data,
-            image
+            
         })
         sendResponse(res,{
             statusCode:201,
@@ -70,15 +68,6 @@ const updateProvider = catchAsync(
             throw new Error('Provider not found');
         }
         const data = req.body;
-        if(data.facilities){
-            data.facilities = JSON.parse(data.facilities);
-        }
-        const image = getSingleFilePath(req.files,'image');
-        if(image){
-            data.image = image;
-            unlinkFile(provider.image);
-        }
-  
         const result = await ProviderService.updateProvider(id,data);
         sendResponse(res,{
             statusCode:200,

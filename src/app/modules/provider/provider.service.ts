@@ -6,22 +6,18 @@ import { IProvider } from "./provider.interface";
 import { Provider } from "./provider.model";
 
 const createProvider =async (data:IProvider)=>{
-    const service = await Service.findById(data.service)
-    if(!service){
-        throw new ApiError(400,"Service not found")
-    }
-    
+
     return await Provider.create(data)
 }
 
 
 const getAllProvidersByService = async(service:string)=>{
-    return await Provider.find({status:'active',service:service}).populate("service")
+    return await Provider.find({status:'active',service:service})
 }
 
 const getAllProviders=async(query:Record<string,any>)=>{
     const result = new QueryBuilder(Provider.find({status:'active'}),query).sort()
-    const data = await result.modelQuery.populate('service').lean()
+    const data = await result.modelQuery.lean()
     const filterData = data.filter((item:any)=>{
         return !query.search || (
             item.name.toLowerCase().includes(query.search.toLowerCase()) ||
@@ -38,7 +34,7 @@ const getAllProviders=async(query:Record<string,any>)=>{
 }
 
 const getSingleProvider = async(id:string)=>{
-    return await Provider.findOne({_id:id,status:'active'}).populate('service')
+    return await Provider.findOne({_id:id,status:'active'})
 }
 
 const updateProvider = async(id:string,data:any)=>{
@@ -46,7 +42,7 @@ const updateProvider = async(id:string,data:any)=>{
 }
 
 const deleteProvider = async(id:string)=>{
-    return await Provider.findByIdAndUpdate(id,{status:'deleted'})
+    return await Provider.findByIdAndDelete(id)
 }
 
 export const ProviderService={

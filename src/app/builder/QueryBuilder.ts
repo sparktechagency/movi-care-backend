@@ -9,6 +9,8 @@ class QueryBuilder<T> {
     this.query = query;
   }
 
+
+
   //searching
   search(searchableFields: string[]) {
     if (this?.query?.searchTerm) {
@@ -95,3 +97,9 @@ class QueryBuilder<T> {
 }
 
 export default QueryBuilder;
+
+let num = 4 
+
+let num3 = num as any as string
+
+

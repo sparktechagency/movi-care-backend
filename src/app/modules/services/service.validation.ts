@@ -8,7 +8,11 @@ const createServiceZodSchema = z.object({
         image: z.any(),
         adults_price: z.string({required_error:"adults_price is required"}),
         kids_price: z.string({required_error:"kids_price is required"}),
-        service_price: z.string().optional()
+        service_price: z.string(),
+        price_per_km: z.string(),
+        price_per_hour: z.string(),
+        taxs:z.string(),
+        fixed_price:z.string(),
       })
 
 }
@@ -21,7 +25,11 @@ const createUpdateServiceZodSchema = z.object({
         image: z.any().optional(),
         adults_price: z.string().optional(),
         kids_price: z.string().optional(),
-        service_price: z.string().optional()
+        service_price: z.string().optional(),
+        price_per_km: z.string().optional(),
+        price_per_hour: z.string().optional(),
+        taxs:z.string().optional(),
+        
       })
 
 }

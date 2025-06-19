@@ -8,6 +8,11 @@ import { ServiceRoutes } from '../app/modules/services/service.route';
 import { ProviderRoutes } from '../app/modules/provider/provider.route';
 import { BookingRoutes } from '../app/modules/booking/booking.route';
 import { DisclaimerRoutes } from '../app/modules/disclaimer/disclaimer.route';
+import { ClientRoutes } from '../app/modules/client/client.route';
+import { ReviewRoutes } from '../app/modules/review/review.route';
+import { FacilityRoutes } from '../app/modules/facility/facility.route';
+import { OverviewRoutes } from '../app/modules/overview/overview.route';
+import { NotificationRoutes } from '../app/modules/notification/notification.routes';
 const router = express.Router();
 
 const apiRoutes = [
@@ -46,6 +51,26 @@ const apiRoutes = [
   {
     path:"/disclaimer",
     route:DisclaimerRoutes
+  },
+  {
+    path:"/client",
+    route:ClientRoutes
+  },
+  {
+    path:"/review",
+    route:ReviewRoutes
+  },
+  {
+    path:"/facility",
+    route:FacilityRoutes
+  },
+  {
+    path:"/overview",
+    route:OverviewRoutes
+  },
+  {
+    path:"/notification",
+    route:NotificationRoutes
   }
 ];
 

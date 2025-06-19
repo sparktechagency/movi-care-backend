@@ -29,7 +29,8 @@ const googleInitialize = () => {
             name: profile.displayName,
             email: profile.emails![0].value,
             role:USER_ROLES.USER,
-            password:'12345678'
+            password:'12345678',
+            verified: true,
           });
           return done(null, newUser);
         }

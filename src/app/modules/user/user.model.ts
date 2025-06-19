@@ -27,6 +27,10 @@ const userSchema = new Schema<IUser, UserModal>(
       type: String,
       required: false,
     },
+    contact: {
+      type: String,
+      required: false,
+    },
     image: {
       type: String,
       default: 'https://i.ibb.co/z5YHLV9/profile.png',

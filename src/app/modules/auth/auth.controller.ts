@@ -43,6 +43,8 @@ const forgetPassword = catchAsync(async (req: Request, res: Response) => {
 
 const resetPassword = catchAsync(async (req: Request, res: Response) => {
   const token = req.headers.authorization;
+  console.log(token);
+  
   const { ...resetData } = req.body;
   const result = await AuthService.resetPasswordToDB(token!, resetData);
 
@@ -60,7 +62,7 @@ const changePassword = catchAsync(async (req: Request, res: Response) => {
   await AuthService.changePasswordToDB(user!, passwordData);
 
   sendResponse(res, {
-    success: true,
+    success: false,
     statusCode: StatusCodes.OK,
     message: 'Your password has been successfully changed',
   });
@@ -69,17 +71,23 @@ const changePassword = catchAsync(async (req: Request, res: Response) => {
 const googleSignIn = catchAsync(async (req: Request, res: Response) => {
   
   const result = await AuthService.googleSignInToDB(req.user);
-
-  sendResponse(res, {
-    success: true,
-    statusCode: StatusCodes.OK, 
-    message: 'User logged in successfully.',
-    data: result,
+  const response = res.cookie('refreshToken', result.refreshToken, {
+    httpOnly: true,
+    secure: false,
+    sameSite: 'none',
   });
+
+  const resoponse = response.cookie('accessToken', result.accessToken, {
+    httpOnly: true,
+    secure: false,
+    sameSite: 'none',
+  });
+
+ return resoponse.redirect(`http://10.0.70.92:3000?accessToken=${result.accessToken}&refreshToken=${result.refreshToken}`);
 });
 
 const refreshToken = catchAsync(async (req: Request, res: Response) => {
-  const token = req.headers.authorization
+  const token = req.body.refreshToken;
   const result = await AuthService.refreshAccessTokenDB(token!)
   sendResponse(res,{
     statusCode:200,

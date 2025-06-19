@@ -19,31 +19,21 @@ const bookingSchema = new Schema<IBooking,BookingModel>({
     required: true
   },
   date: {
-    type: String,
-    required: true
-  },
-  time: {
-    type: String,
+    type: Date,
     required: true
   },
   pickup_location: {
-    name: { type: String, required: true },
-    latitude: { type: Number, required: true },
-    longitude: { type: Number, required: true }
+    type: String,
+    required: true
   },
   dropoff_location: {
-    name: { type: String, required: true },
-    latitude: { type: Number, required: true },
-    longitude: { type: Number, required: true }
+    type: String,
+    required: true
   },
   status: {
     type: String,
     enum: Object.values(BookingStatus),
     default: BookingStatus.PENDING,
-    required: true
-  },
-  total_amount: {
-    type: Number,
     required: true
   },
   payment_status: {
@@ -77,7 +67,7 @@ const bookingSchema = new Schema<IBooking,BookingModel>({
     required: true
   },
   formatted_date: {
-    type: String
+    type: Date
   },
   payment_intent_id: {
     type: String
@@ -90,10 +80,28 @@ const bookingSchema = new Schema<IBooking,BookingModel>({
   },
   order_id: {
     type: String
+  },
+  distance: {
+    type: Number
+  },
+  duration: {
+    type: Number
+  },
+ pickup_time: {
+    type: Date,
+    required: true
+  },
+  dropoff_time: {
+    type: Date,
+    required: true
+  },
+  transaction_id: {
+    type: String
   }
   
 }, { timestamps: true });
 
+bookingSchema.index({pickup_time:1,dropoff_time:1})
 const Booking = model<IBooking, BookingModel>('Booking', bookingSchema);
 
 export default Booking;

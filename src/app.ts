@@ -8,6 +8,7 @@ import { handleWebhook } from './webhook/handleWebhook';
 import session from 'express-session';
 import passport from 'passport';
 import { passportHelper } from './helpers/passportHelper';
+import CookieParser from 'cookie-parser';
 const app = express();
 
 //morgan
@@ -16,7 +17,10 @@ app.use(Morgan.errorHandler);
 
 app.post('/api/webhook',express.raw({'type':'application/json'}),handleWebhook)
 //body parser
-app.use(cors());
+app.use(cors({
+  origin:['http://localhost:3000','http://10.0.70.92:3000','http://10.0.70.92:5173','https://mithila.binarybards.online','https://e335-115-127-157-41.ngrok-free.app'],
+  credentials:true,
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(session({ secret: "sharifSecret", resave: false, saveUninitialized: true }));

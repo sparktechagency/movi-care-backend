@@ -32,5 +32,9 @@ export default {
   },
   url:{
     base_urL:process.env.BASE_URL,
+    frontend_url:process.env.FRONTEND_URL,
+  },
+  google:{
+    apiKey:process.env.GOOGLE_MAP_API_KEY
   }
 };

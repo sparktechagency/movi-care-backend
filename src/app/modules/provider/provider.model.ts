@@ -10,18 +10,9 @@ const providerSchema = new mongoose.Schema<IProvider,ProviderModel>({
         type:String,
         required:true
     },
-    image:{
-        type:String,
-        required:true
-    },
     facilities:[String],
     price:{
         type:Number,
-        required:true
-    },
-    service:{
-        type:mongoose.Types.ObjectId,
-        ref:'services',
         required:true
     },
     status:{

@@ -266,6 +266,7 @@ const changePasswordToDB = async (
 
 const googleSignInToDB = async (user:any) => {
 
+
   const token = jwtHelper.createToken({id:user._id,role:user.role,email:user.email},config.jwt.jwt_secret!,config.jwt.jwt_expire_in!);
   const refreshToken = await createRefreshToken(user);
   return {accessToken:token,refreshToken};

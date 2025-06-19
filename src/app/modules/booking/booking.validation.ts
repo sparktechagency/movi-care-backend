@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { date, z } from "zod";
 import { BookingStatus } from "../../../enums/booking";
 
 const createBookingZodSchema = z.object({
@@ -6,26 +6,19 @@ const createBookingZodSchema = z.object({
     service: z.string(), // MongoDB ObjectId as string
     provider: z.string(),
     date: z.string(),
-    time: z.string(), 
-    pickup_location: z.object({
-      name: z.string(),
-      latitude: z.number(),
-      longitude: z.number(),
-    }),
-    dropoff_location: z.object({
-      name: z.string(),
-      latitude: z.number(),
-      longitude: z.number(),
-    }),
-    total_amount: z.number(),
-    base_fare: z.number(),
-    service_charge: z.number(),
-    additional_travelerse_fee: z.number(),
-    kids: z.number().min(0),
-    adults: z.number().min(1),
-    tax: z.number(),
+    pickup_location: z.string(),
+    dropoff_location: z.string(),
+     base_fare: z.number().positive().transform(value => parseFloat(value.toFixed(2))),
+    service_charge: z.number().positive().transform(value => parseFloat(value.toFixed(2))),
+    additional_travelerse_fee: z.number().positive().transform(value => parseFloat(value.toFixed(2))),
+    kids: z.number(),
+    adults: z.number(),
+    tax: z.number().positive().transform(value => parseFloat(value.toFixed(2))),
     additional_info: z.string().optional(),
     total_price: z.number().optional(),
+    distance: z.number().positive().transform(value => parseFloat(value.toFixed(2))),
+    duration: z.number().positive().transform(value => parseFloat(value.toFixed(2))),
+    pickup_time: z.string(),
   }),
 })
 
@@ -34,14 +27,35 @@ const updateBookingZodSchema = z.object({
         status: z.nativeEnum(BookingStatus),
     })
 })
-const getSlotsZodSchema = z.object({
-    query: z.object({
-        month: z.string()
+
+
+const createRebookZodSchema = z.object({
+    body: z.object({
+        date: z.string(),
+        pickup_time: z.string()
     })
-}
-)
+})
+
+
+const createCheckZodSchema = z.object({
+    body: z.object({
+        date: z.string(),
+        time: z.string(),
+        pickup_location: z.string(),
+        dropoff_location: z.string(),
+    })
+})
+
+
+const getDateTimeSlotsZodSchema = z.object({
+    query: z.object({
+        date: z.string()
+    })
+})
 export const BookingValidation = {
   createBookingZodSchema,
   updateBookingZodSchema,
-  getSlotsZodSchema,
+  createRebookZodSchema,
+  getDateTimeSlotsZodSchema,
+  createCheckZodSchema
 };

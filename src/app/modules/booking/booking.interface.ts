@@ -6,18 +6,9 @@ export type IBooking = {
     service:ObjectId;
     user:ObjectId;
     provider:ObjectId;
-    date:string;
-    time:string;
-    pickup_location:{
-        name:string;
-        latitude:number;
-        longitude:number;
-    };
-    dropoff_location:{
-        name:string;
-        latitude:number;
-        longitude:number;
-    };
+    date:Date;
+    pickup_location:string;
+    dropoff_location:string;
     status:BookingStatus
     total_amount:number;
     payment_status:'paid' | 'unpaid';
@@ -27,11 +18,18 @@ export type IBooking = {
     kids:number,
     adults:number;
     tax:number;
-    formatted_date?:string;
+    formatted_date?:Date;
     payment_intent_id?:string;
     additional_info?:string
     total_price :number;
     order_id?:string;
+    createdAt?:string;
+    updatedAt?:string;
+    distance:number;
+    duration:number
+    pickup_time:Date;
+    dropoff_time:Date;
+    transaction_id?:string;
 
 }
 

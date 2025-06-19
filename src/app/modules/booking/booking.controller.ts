@@ -33,12 +33,14 @@ const getUSerBookings= catchAsync(
 
 const getAllBookings =catchAsync(
     async(req:Request,res:Response)=>{
-        const result =await BookingService.getAllBookings(req.query);
+        const user = req.user;
+        const result =await BookingService.getAllBookings(req.query, user!);
         sendResponse(res,{
             statusCode:200,
             message:'All Bookings fetched successfully',
             success:true,
-            data:result
+            data:result.data,
+            pagination:result.getPaginationInfo
         })
     }
 )
@@ -84,11 +86,70 @@ const getSlotsOfMonths = catchAsync(
         })
     }
 )
+
+const rebookOrder = catchAsync(
+    async(req:Request,res:Response)=>{
+        const id=req.params.id;
+        const body = req.body;
+        const result =await BookingService.rebookOrderIntoDB(id as any,body);
+        sendResponse(res,{
+            statusCode:200,
+            message:'Booking rebooked successfully',
+            success:true,
+            data:result
+        })
+    }
+)
+
+const getDateTimeSlots = catchAsync(
+    async (req:Request,res:Response)=>{
+        const {date} = req.query;
+        const result =await BookingService.getDateTimeSlots(date as string);
+        sendResponse(res,{
+            statusCode:200,
+            message:'Booking slots fetched successfully',
+            success:true,
+            data:result
+        })
+    }
+)
+
+const getTranscation = catchAsync(
+    async(req:Request,res:Response)=>{
+        const query = req.query;
+        const result =await BookingService.bookingTransactions(query);
+        sendResponse(res,{
+            statusCode:200,
+            message:'Transcation fetched successfully',
+            success:true,
+            data:result.data,
+            pagination:result.paginationInfo
+        })
+    }
+)
+
+const timeSLotChecker = catchAsync(
+    async (req:Request,res:Response)=>{
+        const {date,time,pickup_location,dropoff_location} = req.body;
+        const result =await BookingService.timeSLotChecker({date:date,pickup_time:time,pickup_location:pickup_location,dropoff_location:dropoff_location});
+        sendResponse(res,{
+            statusCode:200,
+            message:'Booking slots fetched successfully',
+            success:true,
+            data:result
+        })
+    }
+)
+
 export const BookingController={
     bookingService,
     getUSerBookings,
     getAllBookings,
     changeStatus,
     getBooking,
-    getSlotsOfMonths
+    getSlotsOfMonths,
+    rebookOrder,
+    getDateTimeSlots,
+    getTranscation,
+    timeSLotChecker
 }

@@ -208,7 +208,8 @@ const getAllBookings = async (query: Record<string, any>, user: JwtPayload) => {
 };
 
 const verifyOrder = async (order_id: any, payment_id: string) => {
-  const booking: any = await Booking.findOneAndUpdate(
+  try {
+      const booking: any = await Booking.findOneAndUpdate(
     { _id: order_id },
     { payment_intent_id: payment_id, payment_status: 'paid' },
     { new: true }
@@ -222,7 +223,11 @@ const verifyOrder = async (order_id: any, payment_id: string) => {
     user: booking?.user._id as any,
   });
   return booking;
-};
+
+  } catch (error) {
+    return console.log(error);
+  }
+}
 
 const changeStatus = async (
   id: string,

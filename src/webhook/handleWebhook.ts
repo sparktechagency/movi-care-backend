@@ -20,7 +20,7 @@ export const handleWebhook = async(req:Request,res:Response)=>{
     switch (event.type) {
       case 'checkout.session.completed':
         const session = event.data.object;
-        const paymentIntentId = session.payment_intent;
+        const paymentIntentId = session?.payment_intent;
         const metaData = session?.metadata?.data;
         await BookingService.verifyOrder(JSON.parse(metaData!),paymentIntentId as any)
         break;

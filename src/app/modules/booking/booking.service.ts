@@ -45,7 +45,6 @@ const bookServiceToDB = async (data: IBooking, userData: JwtPayload) => {
   if (new Date(formatted) < new Date()) {
     throw new ApiError(403, "You can't book a past date");
   }
-  console.log(data);
   const time = approximateTime(
     data.date as any,
     data.pickup_time as any,
@@ -72,7 +71,6 @@ const bookServiceToDB = async (data: IBooking, userData: JwtPayload) => {
     dropoff_time: { $gte: data.pickup_time, $lte: data.dropoff_time },
   });
 
-  console.log(bookingExist);
   
   
 

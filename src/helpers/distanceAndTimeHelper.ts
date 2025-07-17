@@ -1,7 +1,7 @@
 import axios from "axios";
 import config from "../config";
 import { timeSlots } from "../shared/constrant";
-
+import { toZonedTime } from 'date-fns-tz';
 export async function getDistanceDuration(origin:string, destination:string) {
   const apiKey = config.google.apiKey
   const url = `https://maps.googleapis.com/maps/api/distancematrix/json?origins=${encodeURIComponent(
@@ -11,10 +11,6 @@ export async function getDistanceDuration(origin:string, destination:string) {
   try {
     const res = await axios.get(url);
     const data = res.data;
-
-    
-    
-
     const element = data.rows[0].elements[0];
     const distance = element.distance.value && (element.distance.value/1000)
     const duration = element.duration.value && (element.duration.value/3600)
@@ -26,47 +22,44 @@ export async function getDistanceDuration(origin:string, destination:string) {
   }
 }
 
-export const makeDateFormat = (date:string,time:string)=>{
 
+const TIME_ZONE = 'America/Costa_Rica'; // You can make this dynamic if needed
+
+export const makeDateFormat = (date: string, time: string) => {
+  const dateTime = new Date(`${date} ${time}`); // Format: "YYYY-MM-DD HH:mm"
+  const dateData=toZonedTime(dateTime, TIME_ZONE); // Converts to UTC
   
+return dateData;
+};
 
- const start = new Date(`${date} ${time}`);
- 
-  return start;
-}
+export const approximateTime = (
+  date: string,
+  time: string,
+  duration: number,
+  bufferTime: number = 60
+) => {
+  const start = makeDateFormat(date, time);
+  const end = new Date(start.getTime() + ((duration * 60*60) + bufferTime) * 1000)
+  let fixedEnd: Date | null = null;
 
-
-export const approximateTime = (date: string, time: string, duration: number, bufferTime: number = 60) => {
-  // Parse time parts
- const start = makeDateFormat(date,time)
-
-  const end = new Date(start.getTime() + (duration * 60 + bufferTime) * 60000);
-
-  let fixedEnd = null
-
-  timeSlots.forEach((slot) => {
-    const slotDate = makeDateFormat(date,slot)
-    const diffInMinutes = Math.abs((slotDate.getTime() - end.getTime()) / (1000 * 60));
+  timeSlots.forEach((slotTime) => {
+    const slotDate = makeDateFormat(date, slotTime);
+    const diffInMinutes = Math.abs((slotDate.getTime() - end.getTime()) / 60000);
+    
     if (diffInMinutes <= 15) {
-      console.log(diffInMinutes);
+      console.log(`Time matched with ${diffInMinutes} min difference`);
+      console.log(`Slot Time: ${slotTime}`);
       
       fixedEnd = slotDate;
     }
-    
-  
-})
+  });
 
-console.log(duration);
+  return {
+    start,
+    end: fixedEnd,
+  };
+};
 
-
-console.log(fixedEnd);
-
-return{
-  start,
-  end:fixedEnd
-}
-
-}
 
 
 

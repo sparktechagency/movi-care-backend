@@ -51,7 +51,10 @@ const bookServiceToDB = async (data: IBooking, userData: JwtPayload) => {
     data2?.duration
   );
 
-  if (!time.start || !time.end) {
+  console.log(time);
+  
+
+  if (!time?.start || !time?.end) {
     throw new ApiError(
       403,
       'This time slot is not available please select another time slot'
@@ -510,6 +513,9 @@ const timeSLotChecker = async (data: {
     data.dropoff_location
   );
 
+  console.log(data2);
+  
+
   if (!data2?.distance || !data2?.duration) {
     
     throw new ApiError(404, 'Invalid location');
@@ -521,6 +527,9 @@ const timeSLotChecker = async (data: {
     data.pickup_time as any,
     data2?.duration
   );
+
+
+  
 
   if (!time.start || !time.end) {
     throw new ApiError(

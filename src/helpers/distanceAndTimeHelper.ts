@@ -40,6 +40,8 @@ export const approximateTime = (
 ) => {
   const start = makeDateFormat(date, time);
   const end = new Date(start.getTime() + ((duration * 60*60) + bufferTime) * 1000)
+  console.log(`Start: ${start}, End: ${end}`);
+  
   let fixedEnd: Date | null = null;
 
   timeSlots.forEach((slotTime) => {

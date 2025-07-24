@@ -22,6 +22,7 @@ import {
 import { timeSlots } from '../../../shared/constrant';
 import crypto from 'crypto';
 import config from '../../../config';
+import { toZonedTime } from 'date-fns-tz';
 const bookServiceToDB = async (data: IBooking, userData: JwtPayload) => {
   const service = await Service.findById(data.service);
   if (!service) {
@@ -51,7 +52,7 @@ const bookServiceToDB = async (data: IBooking, userData: JwtPayload) => {
     data2?.duration
   );
 
-  console.log(time);
+ 
   
 
   if (!time?.start || !time?.end) {
@@ -105,7 +106,7 @@ const bookServiceToDB = async (data: IBooking, userData: JwtPayload) => {
     ratePerKm: service.price_per_km || 0,
     taxRate: service.taxs || 0,
   });
-  data.total_price = priceData.total;
+  
 
   const booking = await Booking.create(data);
 

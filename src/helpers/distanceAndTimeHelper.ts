@@ -23,13 +23,13 @@ export async function getDistanceDuration(origin:string, destination:string) {
 }
 
 
-const TIME_ZONE = 'America/Costa_Rica'; // You can make this dynamic if needed
+const TIME_ZONE = 'UTC'; // You can make this dynamic if needed
 
 export const makeDateFormat = (date: string, time: string) => {
   const dateTime = new Date(`${date} ${time}`); // Format: "YYYY-MM-DD HH:mm"
   const dateData=toZonedTime(dateTime, TIME_ZONE); // Converts to UTC
   
-return dateData;
+return dateTime;
 };
 
 export const approximateTime = (
@@ -38,9 +38,11 @@ export const approximateTime = (
   duration: number,
   bufferTime: number = 60
 ) => {
+  console.log(time);
+  
   const start = makeDateFormat(date, time);
   const end = new Date(start.getTime() + ((duration * 60*60) + bufferTime) * 1000)
-  console.log(`Start: ${start}, End: ${end}`);
+  console.log(`Start: ${start.toLocaleTimeString()}, End: ${end.toLocaleTimeString()}`);
   
   let fixedEnd: Date | null = null;
 

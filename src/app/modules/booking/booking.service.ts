@@ -563,7 +563,11 @@ const timeSLotChecker = async (data: {
 
   return {
     time: time.start,
-    end: time.end,
+    end: new Date(time.end).toLocaleTimeString('en-US',{
+      hour: 'numeric',
+      minute: 'numeric',
+      hour12: true,
+    }),
   };
 };
 

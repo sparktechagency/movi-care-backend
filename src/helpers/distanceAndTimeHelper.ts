@@ -41,7 +41,7 @@ export const approximateTime = (
   console.log(time);
   
   const start = makeDateFormat(date, time);
-  const end = new Date(start.getTime() + ((duration * 60*60) + bufferTime) * 1000)
+  const end = new Date(start.getTime() + ((duration * 60) + bufferTime) * 1000)
   console.log(`Start: ${start.toLocaleTimeString()}, End: ${end.toLocaleTimeString()}`);
   
   let fixedEnd: Date | null = null;

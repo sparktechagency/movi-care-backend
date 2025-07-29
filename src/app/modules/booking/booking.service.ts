@@ -558,6 +558,13 @@ const timeSLotChecker = async (data: {
     );
   }
 
+  const reducedTime = new Date(new Date(time.end).getTime() - 60 * 60 * 1000);
+
+const formattedTime = reducedTime.toLocaleTimeString('en-US', {
+  hour: 'numeric',
+  minute: 'numeric',
+  hour12: true,
+});
   
 
 
@@ -565,11 +572,7 @@ const timeSLotChecker = async (data: {
 
   return {
     time: time.start,
-    end: new Date(time.end).toLocaleTimeString('en-US',{
-      hour: 'numeric',
-      minute: 'numeric',
-      hour12: true,
-    }),
+    end: formattedTime,
   };
 };
 

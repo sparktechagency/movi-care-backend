@@ -559,12 +559,12 @@ const timeSLotChecker = async (data: {
   }
 
   const reducedTime = new Date(new Date(time.end).getTime() - 60 * 60 * 1000);
-
-const formattedTime = reducedTime.toLocaleTimeString('en-US', {
+const currentDate = new Date();
+const formattedTime =currentDate.getDate()==reducedTime.getDate()? reducedTime.toLocaleTimeString('en-US', {
   hour: 'numeric',
   minute: 'numeric',
   hour12: true,
-});
+}): reducedTime.toLocaleString()
   
 
 

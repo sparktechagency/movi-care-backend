@@ -3,6 +3,7 @@ import { StatusCodes } from 'http-status-codes';
 import catchAsync from '../../../shared/catchAsync';
 import sendResponse from '../../../shared/sendResponse';
 import { AuthService } from './auth.service';
+import config from '../../../config';
 
 const verifyEmail = catchAsync(async (req: Request, res: Response) => {
   const { ...verifyData } = req.body;
@@ -83,7 +84,7 @@ const googleSignIn = catchAsync(async (req: Request, res: Response) => {
     sameSite: 'none',
   });
 
- return resoponse.redirect(`http://10.0.70.92:3000?accessToken=${result.accessToken}&refreshToken=${result.refreshToken}`);
+ return resoponse.redirect(`${config.url.frontend_url}?accessToken=${result.accessToken}&refreshToken=${result.refreshToken}`);
 });
 
 const refreshToken = catchAsync(async (req: Request, res: Response) => {

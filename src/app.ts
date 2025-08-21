@@ -18,7 +18,7 @@ app.use(Morgan.errorHandler);
 app.post('/api/webhook',express.raw({'type':'application/json'}),handleWebhook)
 //body parser
 app.use(cors({
-  origin:['http://localhost:3000','http://10.0.70.92:3000','http://10.0.70.92:5173','https://mithila.binarybards.online','http://31.97.171.35:3000','http://31.97.171.35:4173',"https://movicare.cr","https://admin.movicare.cr"],
+  origin:['http://localhost:3000','http://10.0.70.92:3000','http://10.0.70.92:5173','https://mithila.binarybards.online','http://31.97.171.35:3000','http://31.97.171.35:4173',"https://movicare.cr","https://admin.movicare.cr","https://dev.movicare.cr"],
   credentials:true,
 }));
 app.use(express.json());

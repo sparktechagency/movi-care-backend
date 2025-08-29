@@ -30,6 +30,7 @@ export type IBooking = {
     pickup_time:Date;
     dropoff_time:Date;
     transaction_id?:string;
+    refund_status?:"pending" | "refunded"
 
 }
 

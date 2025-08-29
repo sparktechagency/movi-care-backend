@@ -97,6 +97,10 @@ const bookingSchema = new Schema<IBooking,BookingModel>({
   },
   transaction_id: {
     type: String
+  },
+  refund_status:{
+    type: String,
+    enum:["pending","refunded"],
   }
   
 }, { timestamps: true });

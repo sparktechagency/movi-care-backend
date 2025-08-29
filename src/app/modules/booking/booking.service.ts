@@ -260,7 +260,7 @@ const changeStatus = async (
     });
     const refund = await Booking.findByIdAndUpdate(
       id,
-      { status: BookingStatus.CANCELLED },
+      { status: BookingStatus.CANCELLED,refund_status:"refunded" },
       { new: true }
     );
     return {
@@ -269,17 +269,34 @@ const changeStatus = async (
     };
   }
   if (status == BookingStatus.CANCELLED && user.role == USER_ROLES.USER) {
+    if(booking?.refund_status == "pending"){
+      throw new ApiError(403, 'Refund is already requested');
+    }
     const currentDate: any = new Date();
 
     const bookingDate: any = new Date(booking.date!);
     const diff = bookingDate - currentDate;
     const diffInHouurs = diff / (1000 * 60 * 60);
-
+    
     if (diffInHouurs < 48) {
-      throw new ApiError(
-        403,
-        'You cannot cancel the booking within 48 hours of booking'
+      sendNotifications({
+        title:`${userData?.name} Cancelled Booking and Refund Requested`,
+        text:`${userData?.name} Cancelled Booking and Refund Requested`,
+        type:"booking",
+        link:booking?._id as any as string,
+        user:(booking as any)?.user as any
+      })
+
+      await Booking.findByIdAndUpdate(
+        id,
+        { refund_status:"pending" },
+        { new: true }
       );
+
+      return {
+        message: 'Refund Requested Successfully',
+        data: booking,
+      };
     }
 
     const price = booking.total_price;

@@ -278,7 +278,7 @@ const changeStatus = async (
     const diff = bookingDate - currentDate;
     const diffInHouurs = diff / (1000 * 60 * 60);
     
-    if (diffInHouurs < 48) {
+    if (diffInHouurs < 24) {
       sendNotifications({
         title:`${userData?.name} Cancelled Booking and Refund Requested`,
         text:`${userData?.name} Cancelled Booking and Refund Requested`,
